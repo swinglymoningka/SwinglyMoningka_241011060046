@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Checker</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+        }
+        input {
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Input Checker</h1>
+
+<input type="text" id="input" placeholder="Enter something...">
+<button onclick="checkInput()">Check</button>
+
+<h2 id="result"></h2>
+
+<script>
+function checkInput() {
+    let value = document.getElementById("input").value;
+
+    // cek apakah angka
+    if (!isNaN(value) && value.trim() !== "") {
+        document.getElementById("result").innerText = "NUMBER";
+    } else {
+        document.getElementById("result").innerText = "NOT A NUMBER";
+    }
+}
+</script>
+
+</body>
+</html>
