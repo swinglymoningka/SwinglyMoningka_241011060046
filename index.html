@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scientific Number Checker</title>
+<title>Scientific Notation Checker</title>
 
 <style>
 body {
@@ -27,39 +27,32 @@ body {
     text-align: center;
 
     border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-/* TOP BUTTON */
-.top-bar {
+/* MENU */
+.menu {
+    display: flex;
+    justify-content: space-around;
     margin-bottom: 10px;
 }
 
-.top-btn {
-    padding: 6px 12px;
-    margin: 3px;
-    border-radius: 15px;
-    background: rgba(255,255,255,0.1);
+.menu span {
     color: white;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.2);
-    font-size: 13px;
 }
 
 /* TITLE */
 h1 {
     color: white;
-    font-size: 20px;
-    margin-bottom: 15px;
+    font-size: 18px;
 }
 
-/* FIX SEJAJAR */
+/* INPUT */
 input, button {
     width: 100%;
     box-sizing: border-box;
 }
 
-/* INPUT */
 input {
     padding: 12px;
     border-radius: 10px;
@@ -67,39 +60,19 @@ input {
     margin-bottom: 10px;
 }
 
-/* BUTTON */
 button {
     background: #7209b7;
     color: white;
-    border: none;
     padding: 12px;
     border-radius: 10px;
-    cursor: pointer;
+    border: none;
 }
 
-/* HISTORY BOX */
-#history-box {
+/* RESULT */
+#result {
     margin-top: 15px;
-    max-height: 150px;
-    overflow-y: auto;
-    font-size: 13px;
+    font-size: 18px;
     color: white;
-    border-top: 1px solid rgba(255,255,255,0.3);
-    padding-top: 10px;
-}
-
-/* PAGINATION */
-.pagination {
-    margin-top: 5px;
-    font-size: 12px;
-    color: #ddd;
-}
-
-/* ABOUT */
-#about {
-    margin-top: 10px;
-    font-size: 13px;
-    color: #ddd;
 }
 </style>
 </head>
@@ -108,99 +81,60 @@ button {
 
 <div class="container">
 
-    <!-- MENU DEKAT -->
-    <div class="top-bar">
-        <span class="top-btn" onclick="downloadHistory()">File</span>
-        <span class="top-btn" onclick="toggleAbout()">About Me</span>
+    <div class="menu">
+        <span onclick="downloadHistory()">File</span>
+        <span onclick="alert('Edit menu (optional)')">Edit</span>
+        <span onclick="checkScientific()">Run</span>
+        <span onclick="showAbout()">About</span>
     </div>
 
-    <h1>Scientific Number Checker</h1>
+    <h1>Scientific Notation Checker</h1>
 
-    <input type="text" id="input" placeholder="Type something here...">
-    <button onclick="checkInput()">Check</button>
+    <input type="text" id="input" placeholder="Example: -3.1 x 10^-3">
 
-    <!-- HISTORY -->
-    <div id="history-box"></div>
-    <div class="pagination" id="pagination"></div>
+    <button onclick="checkScientific()">Check</button>
 
-    <!-- ABOUT -->
-    <div id="about"></div>
+    <div id="result"></div>
 
 </div>
 
 <script>
 let historyData = [];
-let currentPage = 1;
-const perPage = 10;
-let aboutVisible = false;
 
-function checkInput() {
-    let inputField = document.getElementById("input");
-    let value = inputField.value;
+function checkScientific() {
+    let input = document.getElementById("input").value.trim();
+    let result = document.getElementById("result");
 
-    if (value.trim() === "") return;
+    // REGEX SCIENTIFIC NOTATION
+    let regex = /^[+-]?(\d+(\.\d+)?|\.\d+)\s*x\s*10\^[-+]?\d+$/i;
 
-    let output;
-
-    if (!isNaN(value)) {
-        output = value + " → is a number";
+    if (regex.test(input)) {
+        result.innerText = "Yes";
+        historyData.push(input + " → Yes");
     } else {
-        output = value + " → not a number";
+        result.innerText = "No";
+        historyData.push(input + " → No");
     }
-
-    historyData.push(output);
-    currentPage = Math.ceil(historyData.length / perPage);
-
-    renderHistory();
-    inputField.value = "";
-}
-
-function renderHistory() {
-    let historyBox = document.getElementById("history-box");
-    let pagination = document.getElementById("pagination");
-
-    let start = (currentPage - 1) * perPage;
-    let end = start + perPage;
-
-    let pageData = historyData.slice(start, end);
-
-    historyBox.innerHTML = pageData.join("<br>");
-
-    let totalPages = Math.ceil(historyData.length / perPage);
-    pagination.innerHTML = totalPages > 1 ? currentPage + "/" + totalPages : "";
 }
 
 // ENTER SUPPORT
 document.getElementById("input").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") checkInput();
+    if (e.key === "Enter") checkScientific();
 });
 
-// DOWNLOAD
+// FILE DOWNLOAD
 function downloadHistory() {
-    let content = "Scientific Number Checker Log\n\n" + historyData.join("\n");
+    let content = historyData.join("\n");
     let blob = new Blob([content], { type: "text/plain" });
     let a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "history.txt";
+    a.download = "result.txt";
     a.click();
 }
 
 // ABOUT
-function toggleAbout() {
-    let about = document.getElementById("about");
-
-    if (!aboutVisible) {
-        about.innerHTML = `
-            <hr>
-            Name: Swingly Moningka<br>
-            NIM: 241011060046<br>
-            Class: Information System 24
-        `;
-        aboutVisible = true;
-    } else {
-        about.innerHTML = "";
-        aboutVisible = false;
-    }
+function showAbout() {
+    alert("Swingly Moningka\n241011060046\nInformation System 24");
 }
 </script>
 
