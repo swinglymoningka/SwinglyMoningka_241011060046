@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scientific Number Checker</title>
 
 <style>
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #1b1b2f, #16213e, #3a0ca3);
     margin: 0;
+    min-height: 100vh;
+
+    /* Gradient lebih smooth & luas */
+    background: linear-gradient(135deg, #1b1b2f, #16213e, #3a0ca3);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* TOP BUTTONS */
+/* TOP BUTTON */
 .top-bar {
-    text-align: center;
     margin-top: 20px;
 }
 
 .top-btn {
-    display: inline-block;
     padding: 8px 15px;
     margin: 5px;
     border-radius: 20px;
@@ -26,34 +32,38 @@ body {
     color: white;
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.2);
-    transition: 0.3s;
 }
 
-.top-btn:hover {
-    background: rgba(255,255,255,0.2);
+/* CENTER WRAPPER */
+.wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 /* CARD */
 .container {
-    background: rgba(255,255,255,0.95);
-    padding: 30px;
+    background: rgba(255,255,255,0.15); /* transparan */
+    backdrop-filter: blur(12px);
+    padding: 25px;
     border-radius: 16px;
-    width: 360px;
-    margin: auto;
-    margin-top: 40px;
+    width: 90%;
+    max-width: 380px;
     text-align: center;
 
     border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 0 20px rgba(0,0,0,0.3),
-                0 0 30px rgba(138,43,226,0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 
-    /* ANIMASI DARI ATAS */
-    opacity: 0;
-    transform: translateY(-40px);
-    animation: fadeDown 1s ease forwards;
+    animation: fadeDown 1s ease;
 }
 
 @keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
     to {
         opacity: 1;
         transform: translateY(0);
@@ -61,76 +71,69 @@ body {
 }
 
 h1 {
-    margin-bottom: 5px;
-    color: #222;
+    color: white;
+    font-size: 22px;
 }
 
 .subtitle {
     font-size: 12px;
-    color: #666;
-    margin-bottom: 20px;
+    color: #ddd;
+    margin-bottom: 15px;
 }
 
 /* INPUT */
 input {
-    width: 90%;
+    width: 100%;
     padding: 12px;
     border-radius: 10px;
-    border: 1px solid #aaa;
+    border: none;
     margin-bottom: 10px;
 }
 
+/* BUTTON */
 button {
-    background: #3a0ca3;
+    background: #7209b7;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #7209b7;
+    width: 100%;
 }
 
 /* HISTORY */
 #history {
     margin-top: 15px;
     font-size: 13px;
-    color: #333;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-    text-align: center;
+    color: white;
 }
 
 /* ABOUT */
 #about {
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 13px;
-    color: #444;
+    color: #ddd;
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOP BUTTONS -->
 <div class="top-bar">
     <span class="top-btn" onclick="downloadHistory()">File</span>
     <span class="top-btn" onclick="toggleAbout()">About Me</span>
 </div>
 
-<!-- MAIN -->
-<div class="container">
-    <h1>Scientific Number Checker</h1>
-    <div class="subtitle">input • check • number • validation</div>
+<div class="wrapper">
+    <div class="container">
+        <h1>Scientific Number Checker</h1>
+        <div class="subtitle">input • check • number • validation</div>
 
-    <input type="text" id="input" placeholder="Type something here...">
-    <br>
-    <button onclick="checkInput()">Check</button>
+        <input type="text" id="input" placeholder="Type something here...">
+        <button onclick="checkInput()">Check</button>
 
-    <div id="history"></div>
-    <div id="about"></div>
+        <div id="history"></div>
+        <div id="about"></div>
+    </div>
 </div>
 
 <script>
@@ -153,20 +156,15 @@ function checkInput() {
     }
 
     historyData.push(output);
-
     historyDiv.innerHTML = historyData.join("<br>");
 
     inputField.value = "";
 }
 
-// ENTER SUPPORT
 document.getElementById("input").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        checkInput();
-    }
+    if (e.key === "Enter") checkInput();
 });
 
-// DOWNLOAD LANGSUNG
 function downloadHistory() {
     let content = "Scientific Number Checker Log\n\n" + historyData.join("\n");
     let blob = new Blob([content], { type: "text/plain" });
@@ -176,7 +174,6 @@ function downloadHistory() {
     a.click();
 }
 
-// ABOUT TOGGLE
 function toggleAbout() {
     let about = document.getElementById("about");
 
