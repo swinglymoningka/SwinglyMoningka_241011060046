@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scientific Notation Scanner</title>
+<title>Scientific Notation Checker</title>
 
 <style>
 body {
@@ -14,22 +14,21 @@ body {
     justify-content: center;
     align-items: center;
 
-    /* ANIMATED BACKGROUND */
     background: linear-gradient(-45deg, #0f0f1a, #1a1a40, #3a0ca3, #7209b7);
     background-size: 400% 400%;
-    animation: gradientMove 10s ease infinite;
+    animation: bgMove 10s ease infinite;
 }
 
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes bgMove {
+    0% { background-position: 0% }
+    50% { background-position: 100% }
+    100% { background-position: 0% }
 }
 
 /* CARD */
 .container {
     width: 90%;
-    max-width: 400px;
+    max-width: 420px;
     padding: 25px;
     border-radius: 18px;
     text-align: center;
@@ -37,42 +36,30 @@ body {
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(15px);
 
-    /* GLOW BORDER */
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    box-shadow: 0 0 20px rgba(114,9,183,0.5),
-                0 0 40px rgba(58,12,163,0.4);
+    border: 2px solid rgba(255,255,255,0.2);
 
-    animation: glowPulse 2.5s infinite;
+    box-shadow:
+        0 0 10px #7209b7,
+        0 0 20px #3a0ca3,
+        0 0 30px #4361ee;
+
+    animation: glow 2s infinite alternate;
 }
 
-@keyframes glowPulse {
-    0% { box-shadow: 0 0 15px rgba(114,9,183,0.4); }
-    50% { box-shadow: 0 0 30px rgba(58,12,163,0.8); }
-    100% { box-shadow: 0 0 15px rgba(114,9,183,0.4); }
-}
-
-/* MENU */
-.menu {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 15px;
-    color: #aaa;
-}
-
-.menu span {
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.menu span:hover {
-    color: white;
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px #7209b7;
+    }
+    to {
+        box-shadow: 0 0 25px #4361ee;
+    }
 }
 
 /* TITLE */
 h1 {
     color: white;
-    font-size: 20px;
+    font-size: 22px;
+    margin-bottom: 15px;
 }
 
 /* INPUT */
@@ -102,7 +89,6 @@ button {
     background: linear-gradient(45deg, #7209b7, #3a0ca3);
     color: white;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 button:hover {
@@ -114,12 +100,24 @@ button:hover {
     margin-top: 15px;
     font-size: 16px;
     font-weight: bold;
-    transition: 0.3s;
 }
 
 .valid { color: #00ffae; }
 .decimal { color: #4cc9f0; }
 .invalid { color: #ff4d6d; }
+
+/* EXAMPLES */
+.examples {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 13px;
+    color: #ddd;
+}
+
+.examples span {
+    display: block;
+    margin-top: 5px;
+}
 </style>
 </head>
 
@@ -127,13 +125,7 @@ button:hover {
 
 <div class="container">
 
-    <div class="menu">
-        <span onclick="downloadHistory()">File</span>
-        <span onclick="runCheck()">Run</span>
-        <span onclick="showAbout()">About</span>
-    </div>
-
-    <h1>Scientific Notation Scanner</h1>
+    <h1>Scientific Notation Checker</h1>
 
     <input type="text" id="input" placeholder="Example: -3.1 x 10^-3">
 
@@ -141,11 +133,28 @@ button:hover {
 
     <div id="result"></div>
 
+    <!-- EXAMPLES -->
+    <div class="examples">
+        <b>✔ Valid Examples:</b>
+        <span>3 x 10^2</span>
+        <span>-5.3 x 10^-4</span>
+        <span>4.321 x 10^3</span>
+        <span>2 x 10^-1</span>
+        <span>7.5 x 10^6</span>
+
+        <br>
+
+        <b>✖ Invalid Examples:</b>
+        <span>300</span>
+        <span>3x102</span>
+        <span>abc</span>
+        <span>10^3</span>
+        <span>3 x 10</span>
+    </div>
+
 </div>
 
 <script>
-let historyData = [];
-
 function runCheck() {
     let input = document.getElementById("input").value.trim();
     let result = document.getElementById("result");
@@ -156,35 +165,21 @@ function runCheck() {
     if (sciRegex.test(input)) {
         result.innerText = "Valid Scientific Notation";
         result.className = "valid";
-        historyData.push(input + " → Scientific");
     }
     else if (decRegex.test(input)) {
         result.innerText = "Decimal Number (Not Scientific)";
         result.className = "decimal";
-        historyData.push(input + " → Decimal");
     }
     else {
-        result.innerText = "Invalid Input or Format";
+        result.innerText = "Invalid Format";
         result.className = "invalid";
-        historyData.push(input + " → Invalid");
     }
 }
 
+// ENTER SUPPORT
 document.getElementById("input").addEventListener("keypress", function(e) {
     if (e.key === "Enter") runCheck();
 });
-
-function downloadHistory() {
-    let blob = new Blob([historyData.join("\n")], { type: "text/plain" });
-    let a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "result.txt";
-    a.click();
-}
-
-function showAbout() {
-    alert("Swingly Moningka\n241011060046\nInformation System 24");
-}
 </script>
 
 </body>
