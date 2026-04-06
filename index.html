@@ -25,7 +25,7 @@ body {
     100% { background-position: 0% }
 }
 
-/* CARD */
+/* CARD UTAMA */
 .container {
     width: 90%;
     max-width: 420px;
@@ -47,19 +47,14 @@ body {
 }
 
 @keyframes glow {
-    from {
-        box-shadow: 0 0 10px #7209b7;
-    }
-    to {
-        box-shadow: 0 0 25px #4361ee;
-    }
+    from { box-shadow: 0 0 10px #7209b7; }
+    to { box-shadow: 0 0 25px #4361ee; }
 }
 
 /* TITLE */
 h1 {
     color: white;
     font-size: 22px;
-    margin-bottom: 15px;
 }
 
 /* INPUT */
@@ -77,11 +72,6 @@ input {
     color: white;
 }
 
-input::placeholder {
-    color: #ccc;
-}
-
-/* BUTTON */
 button {
     padding: 12px;
     border-radius: 10px;
@@ -89,10 +79,6 @@ button {
     background: linear-gradient(45deg, #7209b7, #3a0ca3);
     color: white;
     cursor: pointer;
-}
-
-button:hover {
-    transform: scale(1.05);
 }
 
 /* RESULT */
@@ -106,17 +92,34 @@ button:hover {
 .decimal { color: #4cc9f0; }
 .invalid { color: #ff4d6d; }
 
-/* EXAMPLES */
-.examples {
+/* UI DALAM UI */
+.example-wrapper {
+    display: flex;
+    gap: 10px;
     margin-top: 20px;
-    text-align: left;
-    font-size: 13px;
+}
+
+.example-box {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 12px;
     color: #ddd;
 }
 
-.examples span {
+.example-box b {
     display: block;
-    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.valid-box {
+    box-shadow: 0 0 10px rgba(0,255,174,0.5);
+}
+
+.invalid-box {
+    box-shadow: 0 0 10px rgba(255,77,109,0.5);
 }
 </style>
 </head>
@@ -133,23 +136,23 @@ button:hover {
 
     <div id="result"></div>
 
-    <!-- EXAMPLES -->
-    <div class="examples">
-        <b>✔ Valid Examples:</b>
-        <span>3 x 10^2</span>
-        <span>-5.3 x 10^-4</span>
-        <span>4.321 x 10^3</span>
-        <span>2 x 10^-1</span>
-        <span>7.5 x 10^6</span>
+    <!-- UI DALAM UI -->
+    <div class="example-wrapper">
 
-        <br>
+        <div class="example-box valid-box">
+            <b>✔ Valid</b>
+            3 x 10^2<br>
+            -5.3 x 10^-4<br>
+            4.321 x 10^3
+        </div>
 
-        <b>✖ Invalid Examples:</b>
-        <span>300</span>
-        <span>3x102</span>
-        <span>abc</span>
-        <span>10^3</span>
-        <span>3 x 10</span>
+        <div class="example-box invalid-box">
+            <b>✖ Invalid</b>
+            300<br>
+            3x102<br>
+            abc
+        </div>
+
     </div>
 
 </div>
@@ -176,7 +179,6 @@ function runCheck() {
     }
 }
 
-// ENTER SUPPORT
 document.getElementById("input").addEventListener("keypress", function(e) {
     if (e.key === "Enter") runCheck();
 });
